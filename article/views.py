@@ -1,11 +1,29 @@
+from datetime import datetime
 from django.shortcuts import render
+from django import forms
+from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 
-import datetime
+from .models import Article
 
-from django import forms
-from article.models import Article
-from django.http import HttpResponseRedirect
+
+def home(request):
+    s = "Hello World!"
+    return HttpResponse(s)
+
+
+def now(request):
+    return render(request, "now.html", {'now': datetime.now()})
+
+
+def article_detail(request, pk):
+    article = Article.objects.get(pk=pk)
+    return render(request, 'article_detail.html', {'article': article})
+
+
+def article_list(request):
+    articles = Article.objects.all()
+    return render(request, 'article_list.html', {'articles': articles})
 
 
 class ArticleForm(forms.ModelForm):
@@ -14,21 +32,7 @@ class ArticleForm(forms.ModelForm):
         fields = ['title', 'content', ]
 
 
-def home(request):
-    str = "Hello World!"
-    return HttpResponse(str)
-
-
-def now(request):
-    return HttpResponse(datetime.datetime.now())
-
-
-def detail(request, pk):
-    article = Article.objects.get(pk=int(pk))
-    return render(request, "detail.html", {'article': article})
-
-
-def create(request):
+def article_form(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
@@ -36,4 +40,4 @@ def create(request):
             return HttpResponseRedirect('/article/' + str(new_article.pk))
 
     form = ArticleForm()
-    return render(request, 'create_article.html', {'form': form})
+    return render(request, 'article_form.html', {'form': form})

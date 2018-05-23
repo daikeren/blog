@@ -1,21 +1,29 @@
-from django.conf.urls import patterns, include, url
+"""blog URL Configuration
 
-# Uncomment the next two lines to enable the admin:
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
 from django.contrib import admin
-admin.autodiscover()
+from django.urls import path
 
-urlpatterns = patterns(
-    '',
-    # Examples:
-    # url(r'^$', 'blog.views.home', name='home'),
-    # url(r'^blog/', include('blog.foo.urls')),
-    url(r'^$', 'article.views.home'),
-    url(r'^now', 'article.views.now'),
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+from article.views import now, home, article_detail, article_list, article_form
 
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^article/(?P<pk>[0-9]+)/$', 'article.views.detail'),
-    url(r'^create/$', 'article.views.create'),
-)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('article/<int:pk>/', article_detail),
+    path('now', now),
+    path('home', home),
+    path('create/', article_form),
+    path('', article_list),
+]
